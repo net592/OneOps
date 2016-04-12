@@ -1,0 +1,211 @@
+saltshaker 环境搭建 Ubuntu 14.04.3 LTS
+
+1、安装pip  详细文档及使用http://www.ttlsa.com/python/how-to-install-and-use-pip-ttlsa/
+
+     下载pip
+     wget "https://pypi.python.org/packages/source/p/pip/pip-7.1.2.tar.gz#md5=3823d2343d9f3aaab21cf9c917710196" --no-check-certificate
+
+     安装pip
+     tar -xzvf pip-7.1.2.tar.gz
+     cd  pip-7.1.2
+     python setup.py install
+
+2、安装saltstack   版本 salt 2015.5.3 (Lithium)
+
+     官方文档http://docs.saltstack.cn/zh_CN/latest/topics/installation/ubuntu.html
+     一键添加软件源仓库并导入PPA的key
+     add-apt-repository ppa:saltstack/salt  
+     
+     手动添加软件源仓库和导入PPA key                            
+     echo deb http://ppa.launchpad.net/saltstack/salt/ubuntu `lsb_release -sc` main | sudo tee /etc/apt/sources.list.d/saltstack.list
+     wget -q -O- "http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0x4759FA960E27C0A6" | sudo apt-key add -
+   
+     更新软件仓库
+     apt-get update
+   
+     安装saltstack                             
+     apt-get install salt-master
+     apt-get install salt-minion
+     apt-get install salt-syndic
+     apt-get install salt-api
+
+3、安装cherrypy
+
+     pip install cherrypy==3.8.0
+
+4、配置api
+
+     使用系统pam进行认证,添加系统用户和密码
+     useradd -M -s /sbin/nologin admin
+     passwd admin
+
+     用户名:admin
+     密码:admin
+
+     添加saltapi.conf 文件
+     vim /etc/salt/master.d/saltapi.conf
+     rest_cherrypy:
+        port: 8000
+        host: 127.0.0.1
+        disable_ssl: true
+     external_auth:
+        pam:
+          admin:
+            - .*
+            - '@runner'
+            - '@wheel'
+  
+    /etc/init.d/salt-master restart
+    /etc/init.d/salt-api restart
+    netstat -tnlp | grep 8000   看到8000端口监听在127.0.0.1上就可以了
+
+5、安装及配置Django 和 Django crontab
+
+    pip install Django==1.8.4
+    pip install django-crontab
+
+    vim settings.py       配置数据库和salt api 认证信息
+    DATABASES = {
+               'default': {
+                   'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+                   'NAME': 'saltshaker', # Or path to database file if using sqlite3.
+                   'USER': 'root', # Not used with sqlite3.
+                   'PASSWORD': 'sina', # Not used with sqlite3.
+                   'HOST': 'localhost', # Set to empty string for localhost. Not used with sqlite3.
+                   'PORT': '3306', # Set to empty string for default. Not used with sqlite3.
+        }
+    }
+
+    根据添加的系统用户信息,在settings.py 行尾添加如下信息,进行salt api 的认证配置
+
+    # SaltStack API
+
+    SALT_API_URL = 'http://127.0.0.1:8000'
+    SALT_API_USER = 'admin'
+    SALT_API_PASSWD = 'admin'
+
+
+   #执行如下命令
+   python manage.py migrate                  同步数据
+   python manage.py runserver  0.0.0.0:9000  运行服务
+   python manage.py createsuperuser          设置后台管理员用户名和密码,此用户名和密码用于登陆web页面
+   python manage.py crontab add              添加计划任务用于生成'/tmp/salt_dashboard.tmp' 文件
+
+
+saltshaker 环境搭建 CentOS6.X
+
+1、安装saltstack   版本 salt 2015.5.3 (Lithium)
+
+   rpm --import https://repo.saltstack.com/yum/redhat/6/x86_64/latest/SALTSTACK-GPG-KEY.pub
+   yum clean all
+   yum install salt-master salt-minion salt-api salt-syndic
+
+2、其他软件安装和配置见saltsalt在Ubuntu中的安装
+
+
+
+使用 nginx 和 uwsgi 运行 saltshaker
+
+1、pip install uwsgi django-uwsgi
+2、https://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html
+3、yum install nginx
+
+
+
+
+Return Data To Mysql
+
+1. vim /etc/salt/master     在行尾添加如下行 使用MasterJobCache-Master-SideReturner 这中存储模式
+
+   mysql.host: '127.0.0.1'
+   mysql.user: 'root'
+   mysql.pass: 'sina'
+   mysql.db: 'saltshaker'
+   mysql.port: 3306
+
+   #### Returner job cache to mysql #####
+   master_job_cache: mysql
+
+2. service salt-master restart
+
+3. 修改salt mysql.py 文件  /usr/lib/python2.7/dist-packages/salt/returners/mysql.py
+   默认数据库字段为 fun jid return id success full_ret alter_time 由于return 在python里面是关键字
+   无法在django的models里面创建此字段 所以修改字段为 fun jid returns minion_id success full_ret alter_time
+   即修改mysql.py的235行,内容如下
+   官方建表语句https://docs.saltstack.com/en/latest/ref/returners/all/salt.returners.mysql.html
+
+228   def returner(ret):
+229     '''
+230     Return data to a mysql server
+231     '''
+232     try:
+233         with _get_serv(ret, commit=True) as cur:
+234             sql = '''INSERT INTO `salt_returns`
+235                     (`fun`, `jid`, `returns`, `minion_id`, `success`, `full_ret` )
+236                     VALUES (%s, %s, %s, %s, %s, %s)'''
+237
+238             cur.execute(sql, (ret['fun'], ret['jid'],
+239                               json.dumps(ret['return']),
+240                               ret['id'],
+241                               ret.get('success', False),
+242                               json.dumps(ret)))
+243     except salt.exceptions.SaltMasterError as exc:
+244         log.critical(exc)
+245         log.critical('Could not store return with MySQL returner. MySQL server unavailable.')
+
+
+
+异步请求 Celery
+
+安装 django-celery (3.1.17)
+
+pip install django-celery==3.1.17
+
+安装 celery
+
+pip install celery==3.1.17
+
+安装 rbbitmq
+
+详细安装请产看官方文档 ubuntu 安装http://www.rabbitmq.com/install-debian.html
+Centos 安装http://www.rabbitmq.com/install-rpm.html
+
+添加rbbitmq 仓库
+
+echo 'deb http://www.rabbitmq.com/debian/ testing main' >> /etc/apt/sources.list
+
+避免安装时发生警告添加公钥
+
+wget https://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+apt-key add rabbitmq-signing-key-public.asc
+
+安装rabbitmq
+
+apt-get install rabbitmq-server
+
+开启rabbitmq-management plugin管理插件
+/usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management
+
+
+配置django setting.py
+添加如下行到setting.py
+
+# celery + rabbitmq
+platforms.C_FORCE_ROOT = True   # Running a worker with superuser privileges
+djcelery.setup_loader()
+BROKER_HOST = "127.0.0.1"
+BROKER_PORT = 5672
+BROKER_USER = "guest"
+BROKER_PASSWORD = "guest"
+BROKER_VHOST = "/"
+
+执行如下命令创建djcelery的相关数据库表
+python manage.py makemigrations
+python manage.py migrate
+
+
+启动celery worker
+python manage.py celery worker --loglevel=info
+
+
+ggggg

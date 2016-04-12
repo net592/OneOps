@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+  {% block content %}
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">Manage Host</h2>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Manage Host
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div>
+                                <table>
+                                    <tr>
+                                        <th style="padding:0px 5px 15px 0px">
+                                            <select id="Group_id" class="form-control">
+                                                <option>Select Group</option>
+                                                {% for groups in list_groups %}
+                                                    <option>{{ groups }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </th>
+                                        <th style="padding:0px 5px 15px 0px">
+                                            <input id="HostN" type="text" placeholder="192.168.10.1 or 192.168.10.1,192.168.10.2" style="width: 300px" class="form-control"/>
+                                        </th>
+                                        <th style="padding:0px 5px 15px 0px">
+                                            <input type="button" onClick="AddHost()" value="Add" class="btn btn-outline btn-primary btn-xs" />
+                                        </th>
+                                        <th style="padding:0px 5px 15px 0px">
+                                            <input type="button" onClick="DelHost()" value="Del" class="btn btn-outline btn-primary btn-xs"/>
+                                        </th>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="dataTable_wrapper">
+                                 <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Groups</th>
+                                            <th>Hosts</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for groups,hosts in list_groups.items %}
+                                        <tr class="odd gradeC">
+                                            <td style="white-space: nowrap;">{{ groups}}</td>
+                                            <td>
+                                                {% for host in hosts %}
+                                                    <ui class="list-inline">
+                                                        <li>
+                                                          {{ host }}
+                                                        </li>
+                                                    </ui>
+                                                 {% endfor %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    <script type="text/javascript">
+
+			//Add Host
+			function AddHost(){
+                var str = document.getElementById("Group_id");
+                var group = (str.options[str.selectedIndex].value.replace(/(^\s*)|(\s*$)/g, ""));
+                var host = document.getElementById("HostN").value.replace(/(^\s*)|(\s*$)/g, "");
+                if (host == ""){
+                    alert("Host name is null")
+                }
+                else{
+                    if (group == "Select Group"){
+                        alert ("Group name is null")
+                    }
+                    else{
+                        $.post("../groups/add_host", { groups_name: group , hosts_name: host } );
+                        window.location.reload()
+                    }
+                }
+			}
+
+            //Del Host
+            function DelHost(){
+                var str = document.getElementById("Group_id");
+                var group = (str.options[str.selectedIndex].value.replace(/(^\s*)|(\s*$)/g, ""));
+                var host = document.getElementById("HostN").value.replace(/(^\s*)|(\s*$)/g, "");
+                if (host == ""){
+                    alert("Host name is null")
+                }
+                else{
+                    $.post("../groups/del_host", { groups_name: group , hosts_name: host } );
+                    window.location.reload()
+                }
+			}
+	</script>
+  {% endblock %}
