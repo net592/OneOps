@@ -6,13 +6,13 @@ from shaker.nodegroups import *
 from minions.models import Minions_status
 from returner.models import Salt_grains
 
-#
+#定义客户端状态页面
 @login_required(login_url="/account/login/")
 def minions_status(request):
     status = Minions_status.objects.all()
     return render(request, 'minions/minions_status.html', {'status': status})
-#定义客户端页面
 
+#定义客户端KEY管理
 @login_required(login_url="/account/login/")
 def minions_keys(request):
     sapi = SaltAPI()
@@ -28,6 +28,7 @@ def minions_keys(request):
     keys_all = sapi.list_all_key()
     return render(request, 'minions/minions_keys.html', {'key': keys_all})
 
+#定义获取硬件信息
 @login_required(login_url="/account/login/")
 def minions_hardware_info(request):
     sapi = SaltAPI()

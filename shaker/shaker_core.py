@@ -13,8 +13,9 @@ except ImportError:
 class SaltAPI(object):
     __token_id = ''
 
+#初始化API接口
     def __init__(self):
-        # type: () -> object
+        # type: () -> object获取Setting配置文件
         self.__url = settings.SALT_API_URL
         self.__user = settings.SALT_API_USER
         self.__password = settings.SALT_API_PASSWD
@@ -28,6 +29,7 @@ class SaltAPI(object):
         except KeyError:
             raise KeyError
 
+#定义Post请求参数
     def postRequest(self, obj, prefix='/'):
         url = self.__url + prefix
         headers = {'X-Auth-Token': self.__token_id}
@@ -45,7 +47,7 @@ class SaltAPI(object):
         content = opener.info()
         return content
 
-#定义获取所有客户端KEY
+#定义获取所有客户端KEY函数
     def list_all_key(self):
         params = {'client': 'wheel', 'fun': 'key.list_all'}
         obj = urllib.urlencode(params)
@@ -77,6 +79,7 @@ class SaltAPI(object):
         ret = content['return'][0]['data']['success']
         return ret
 
+#定义不加参数的命令
     def remote_noarg_execution(self, tgt, fun):
         ''' Execute commands without parameters '''
         params = {'client': 'local', 'tgt': tgt, 'fun': fun}
@@ -85,6 +88,7 @@ class SaltAPI(object):
         ret = content['return'][0][tgt]
         return ret
 
+#定义带参数的命令函数
     def remote_execution(self, tgt, fun, arg):
         ''' Command execution with parameters '''
         params = {'client': 'local', 'tgt': tgt, 'fun': fun, 'arg': arg}
@@ -93,6 +97,7 @@ class SaltAPI(object):
         ret = content['return'][0][tgt]
         return ret
 
+#定义CMD命令函数
     def shell_remote_execution(self, tgt, arg):
         ''' Shell command execution with parameters '''
         params = {'client': 'local', 'tgt': tgt, 'fun': 'cmd.run', 'arg': arg, 'expr_form': 'list'}
@@ -101,6 +106,7 @@ class SaltAPI(object):
         ret = content['return'][0]
         return ret
 
+#定义Grains获取函数
     def grains(self, tgt, arg):
         ''' Grains.item '''
         params = {'client': 'local', 'tgt': tgt, 'fun': 'grains.item', 'arg': arg}
@@ -109,6 +115,7 @@ class SaltAPI(object):
         ret = content['return'][0]
         return ret
 
+#定义带命令的CMD函数
     def target_remote_execution(self, tgt, fun, arg):
         ''' Use targeting for remote execution '''
         params = {'client': 'local', 'tgt': tgt, 'fun': fun, 'arg': arg, 'expr_form': 'nodegroup'}
@@ -117,6 +124,7 @@ class SaltAPI(object):
         jid = content['return'][0]['jid']
         return jid
 
+#定义部署SLS编排函数
     def deploy(self, tgt, arg):
         ''' Module deployment '''
         params = {'client': 'local', 'tgt': tgt, 'fun': 'state.sls', 'arg': arg}
@@ -124,6 +132,7 @@ class SaltAPI(object):
         content = self.postRequest(obj)
         return content
 
+#定义异步执行编排函数
     def async_deploy(self, tgt, arg):
         ''' Asynchronously send a command to connected minions '''
         params = {'client': 'local_async', 'tgt': tgt, 'fun': 'state.sls', 'arg': arg}
@@ -132,6 +141,7 @@ class SaltAPI(object):
         jid = content['return'][0]['jid']
         return jid
 
+#定义异步列表函数
     def target_deploy(self, tgt, arg):
         ''' Based on the list forms deployment '''
         params = {'client': 'local_async', 'tgt': tgt, 'fun': 'state.sls', 'arg': arg, 'expr_form': 'list'}
@@ -140,6 +150,7 @@ class SaltAPI(object):
         jid = content['return'][0]['jid']
         return jid
 
+#定义获取Job函数
     def jobs_list(self):
         ''' Get Cache Jobs Defaut 24h '''
         url = self.__url + '/jobs/'
@@ -150,6 +161,7 @@ class SaltAPI(object):
         jid = content['return'][0]
         return jid
 
+#定义返回Mange状态函数
     def runner_status(self, arg):
         ''' Return minion status '''
         params = {'client': 'runner', 'fun': 'manage.' + arg}
@@ -158,6 +170,7 @@ class SaltAPI(object):
         jid = content['return'][0]
         return jid
 
+#定义获取状态函数
     def runner(self, arg):
         ''' Return minion status '''
         params = {'client': 'runner', 'fun': arg}
@@ -166,7 +179,7 @@ class SaltAPI(object):
         jid = content['return'][0]
         return jid
 
-
+#定义主函数
 def main():
     # sapi = SaltAPI(url='http://127.0.0.1:8000',username='admin',password='admin')
     sapi = SaltAPI()
