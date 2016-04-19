@@ -12,7 +12,7 @@ GUI For SaltStack
 
 需求 | 小组 | 进度 | (预计) 完成时间 | 您可以做什么
 ---|:---:|---|:---:|:---:
-恶补技能... | saltshark | ![progress](http://progressed.io/bar/30) | **6m** | 贡献
+恶补技能... | saltshaker | ![progress](http://progressed.io/bar/30) | **6m** | 贡献
 
 ### 截图
 Login
