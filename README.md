@@ -14,10 +14,10 @@ WEB使用:Django 配置管理：Saltstack 监控集成：Zabbix （待完善）
 
 ### 截图
 Login
-![image](https://github.com/net592/SaltWebOps/blob/master/screenshots/Dashboard_index.png)
+![image](https://github.com/net592/SaltWebOps/blob/master/screenshots/Login_index.png)
 
 Dashboart
-![image](https://github.com/net592/SaltWebOps/blob/master/screenshots/2015-12-14_155129.png)
+![image](https://github.com/net592/SaltWebOps/blob/master/screenshots/Dashboard_index.png)
 
 Minion status
 ![image](https://github.com/net592/SaltWebOps/blob/master/screenshots/Minion_staus.png)
