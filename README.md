@@ -11,7 +11,7 @@ GUI For SaltStack
 ---|:---:|---|:---:|:---:M
 学习完善中... | saltshark | ![progress](http://progressed.io/bar/30) | **6** | 贡献
 
-### 截图 <a name="progress">&nbsp;</a>
+### 截图
 Login
 ![image](https://github.com/net592/SaltWebOps/blob/master/screenshots/Dashboard_index.png)
 
