@@ -1,8 +1,19 @@
 # SaltWebOps
 GUI For SaltStack
-学习QQ群 10648574 学习完善中...
+学习QQ群 10648574 
+
+### 进度表 <a name="progress">&nbsp;</a>
+
+
+
+
+需求 | 负责人 | 进度 | (预计) 完成时间 | 您可以做什么
+---|:---:|---|:---:|:---:
+学习完善中... | saltshark | ![progress](http://progressed.io/bar/30) | **1** | 贡献
+
+### 截图 <a name="progress">&nbsp;</a>
 Login
-![image](https://github.com/net592/SaltWebOps/blob/master/screenshots/2015-12-14_171227.png)
+![image](https://github.com/net592/SaltWebOps/blob/master/screenshots/Dashboard_index.png)
 
 Dashboart
 ![image](https://github.com/net592/SaltWebOps/blob/master/screenshots/2015-12-14_155129.png)
