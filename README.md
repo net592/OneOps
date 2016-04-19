@@ -33,6 +33,7 @@ Run Shell Command
 Job list
 ![image](https://github.com/net592/SaltWebOps/blob/master/screenshots/Job_History.png)
 
+###囧( ╯□╰ )待补充学习中
 
 Highstate
 ![image](https://github.com/net592/SaltWebOps/blob/master/screenshots/States_Higstate.png)
