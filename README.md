@@ -8,7 +8,7 @@ WEB使用:Django 配置管理：Saltstack 监控集成：Zabbix （待完善）
 
 
 
-需求 | 负责人 | 进度 | (预计) 完成时间 | 您可以做什么
+需求 | 小组 | 进度 | (预计) 完成时间 | 您可以做什么
 ---|:---:|---|:---:|:---:
 恶补技能... | saltshark | ![progress](http://progressed.io/bar/30) | **6m** | 贡献
 
