@@ -8,8 +8,8 @@ GUI For SaltStack
 
 
 需求 | 负责人 | 进度 | (预计) 完成时间 | 您可以做什么
----|:---:|---|:---:|:---:M
-学习完善中... | saltshark | ![progress](http://progressed.io/bar/30) | **6** | 贡献
+---|:---:|---|:---:|:---:
+学习完善中... | saltshark | ![progress](http://progressed.io/bar/30) | **16** | 贡献
 
 ### 截图
 Login
