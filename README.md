@@ -2,7 +2,9 @@
 GUI For SaltStack
 学习QQ群 10648574 
 #项目情况
-* WEB使用:Django * 配置管理：Saltstack * 监控集成：Zabbix （待完善）
+* WEB使用:Django 
+* 配置管理：Saltstack 
+* 监控集成：Zabbix （待完善）
 ### 进度表 <a name="progress">&nbsp;</a>
 
 
