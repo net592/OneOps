@@ -1,6 +1,6 @@
 # SaltWebOps
 GUI For SaltStack
-学习QQ群 10648574
+学习QQ群 10648574 学习完善中...
 Login
 ![image](https://github.com/net592/SaltWebOps/blob/master/screenshots/2015-12-14_171227.png)
 
