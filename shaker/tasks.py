@@ -1,3 +1,4 @@
+#encoding=utf-8
 from celery import task
 from shaker.shaker_core import *
 from minions.models import Minions_status
@@ -11,7 +12,7 @@ sapi = SaltAPI()
 
 @task()
 def dashboard_task():
-    # minion status data save to mysql
+    # 客户端状态数据写入Mysql minion status data save to mysql
     status = sapi.runner_status('status')
     key_status = sapi.list_all_key()
     up = len(status['up'])
@@ -36,7 +37,7 @@ def dashboard_task():
 
 @task()
 def grains_task():
-    # grains data save to mysql
+    #获取Grains采集数据入库Mysql grains data save to mysql
     salt_grains = Salt_grains()
     minions_status = Minions_status()
     status = sapi.runner_status('status')
