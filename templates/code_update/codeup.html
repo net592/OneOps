@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+  {% block content %}
+
+      <div id="page-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">Blank</h1>
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+    <script>
+        // select all
+        function selectAll(group){
+           var checklist = document.getElementsByClassName(group);
+            //alert(checklist)
+           if(document.getElementById(group).checked) {
+               for(var i=0;i<checklist.length;i++) {
+                     checklist[i].checked = 1;
+                  }
+           }
+           else {
+               for(var j=0;j<checklist.length;j++) {
+                    checklist[j].checked = 0;
+                }
+           }
+        }
+
+        // frame css
+        function iFrameHeight() {
+           var ifm = document.getElementById("iframepage");
+           var subWeb = document.frames ? document.frames["iframepage"].document :
+              ifm.contentDocument;
+              if(ifm != null && subWeb != null) {
+              ifm.height = subWeb.body.scrollHeight;
+              }
+        }
+
+        // onload show first li and textarea
+        function active() {
+            var li = document.getElementById("active_li");
+            var tex = document.getElementById("active_tex");
+            var activeLi = li.getElementsByTagName("li");
+            var activeTex = tex.getElementsByTagName("div");
+            activeLi[0].className = "active";
+            activeTex[0].className = "tab-pane fade in active";
+        }
+        window.onload = active();
+
+        //add SLS
+        function AddSLS(){
+            var sls_name = document.getElementById("sls_name").value.replace(/(^\s*)|(\s*$)/g, "");
+            var sls_content = document.getElementsByClassName("tab-pane fade in active")[0];
+            var sls_content_active = sls_content.getElementsByTagName("textarea")[0].value;
+            if (sls_name == ""){
+                alert("SLS name is null")
+            }
+            else{
+                if (sls_content_active == ""){
+                    alert ("SLS content is null")
+                }
+                else{
+                    $.post("../states_config/add_sls", { filename: sls_name , content: sls_content_active } );
+                    window.location.reload()
+                }
+            }
+        }
+
+        //del sls
+        function DelSLS(){
+            var sls_name = document.getElementById("sls_name").value.replace(/(^\s*)|(\s*$)/g, "");
+            if (sls_name == ""){
+                alert("SLS name is null")
+            }
+            else{
+                $.post("../states_config/del_sls", { filename: sls_name });
+                window.location.reload()
+            }
+        }
+
+    </script>
+
+{% endblock %}
