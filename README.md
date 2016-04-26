@@ -16,7 +16,7 @@ GUI For SaltStack
 
 ### 截图
 Login
-![image](https://github.com/net592/OneOps/blob/oneops-dev/screenshots/Dashboard_index.png)
+![image](https://github.com/net592/OneOps/blob/oneops-dev/screenshots/Login_index.png)
 
 Dashboart
 ![image](https://github.com/net592/SaltWebOps/blob/master/screenshots/Dashboard_index.png)
