@@ -1,6 +1,6 @@
 # SaltWebOps
 GUI For SaltStack
-学习QQ群 10648574 
+学习QQ群 106485742 
 #项目情况
 * WEB框架：Django 
 * 配置管理：Saltstack 
